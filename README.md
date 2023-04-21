@@ -1,4 +1,4 @@
-# Desafio Técnico
+# Desafio Técnico.
 
 ## Introdução
 Para esse desafio utilizaremos uma base de dados genérica contendo informações sobre vendas de uma loja de varejo. O objetivo final é realizar um processo de ETL e análise dos dados para identificar tendências e insights sobre as vendas e o comportamento dos clientes.
