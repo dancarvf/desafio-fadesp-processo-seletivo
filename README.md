@@ -132,7 +132,8 @@ plt.show()
 ```
 
 
-__Img1__
+![Box plot de Vendas](data/Figure_1.png)
+
 
 A partir do boxplot, é possível verificar que há uma grande variabilidade dos dados de Sales com um grande número de outliers superiores. 
 
@@ -169,7 +170,8 @@ ax.yaxis.offsetText.set_visible(False)
 ax.set_yticklabels(['{:.2f}'.format(x/1000) for x in ax.get_yticks()])
 plt.show()
 ```
-IMG2, IMG3 e IMG4
+![](data/Figure_2.png) ![](data/Figure_3.png) ![](data/Figure_4.png)
+
 
 Também podemos realizar a mesma análise com relação aos Paises:
 
@@ -205,7 +207,7 @@ ax.yaxis.offsetText.set_visible(False)
 ax.set_yticklabels(['{:.2f}'.format(x/1000) for x in ax.get_yticks()])
 plt.show()
 ```
-IMG5 IMG6 e IMG 7
+![](data/Figure_5.png) ![](data/Figure_6.png) ![](data/Figure_7.png)
 
 Percebesse que em alguns países houve um prejuizom, dessa forma, é válido verificar qual o coportamento do prejuizo a partir do gráfico:
 
@@ -222,7 +224,7 @@ ax.yaxis.offsetText.set_visible(False)
 ax.set_yticklabels(['{:.2f}'.format(x/1000) for x in ax.get_yticks()])
 plt.show()
 ```
-IMG 8
+![](data/Figure_8.png)
 
 
 
@@ -312,6 +314,30 @@ Logo, temos como produtos mais vendidos por Cidade:
 ___Dessa forma, temos os produtos mais vendidos e suas distribuições geográficas__
 
 ### Objetivo 5: Analise a relação entre as vendas e outras variáveis, como o tempo de entrega e o preço dos produtos.
+
+Para analisar a relação entre variáveis vendas e outras, irei usar gráficos de dispersão.
+- Relação Vendas x Desconto
+
+```
+plt.scatter(df['Sales'], df['Discount'])
+plt.xlabel('Vendas')
+plt.ylabel('Desconto')
+plt.title('Relação entre Vendas e Desconto')
+plt.show()
+```
+![](data/Figure_9.png)
+
+- Relação Vendas e Custo de Envio
+
+```
+plt.scatter(df['Sales'], df['Shipping Cost'])
+plt.xlabel('Vendas')
+plt.ylabel('Shipping Cost')
+plt.title('Relação entre Vendas e Custo de Envio')
+plt.show()
+```
+![](data/Figure_10.png)
+
 
  
 
