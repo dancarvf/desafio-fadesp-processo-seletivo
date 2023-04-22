@@ -2,7 +2,7 @@
 
 ## Objetivos
 ### Objetivo 1: Baixe a base de dados completa e carregue dentro de DataFrame do pandas.	
-Importar a biblioteca necessária para carregar os dados da URL dentro de um DataFrame da biblioteca Pandas __(DESAFIO 1)__
+Importar a biblioteca necessária para carregar os dados da URL dentro de um DataFrame da biblioteca Pandas 
 ```python
 import pandas as pd
 ```
@@ -30,7 +30,7 @@ print(df)
 51289   36388   CA-2014-156720  31-12-2014  4/1/2015  Standard Class    JM-15580     Jill Matthias  ...                              Bagged Rubber Bands    3.024        3      0.2   -0.6048          0.17         Medium       
 ```
 
-__Os Dados foram carregados com sucesso diretamente do GitHub__
+__Os Dados foram carregados com sucesso diretamente do GitHub__ __(DESAFIO 1)__
 	 
   	
 ### Objetivo 2: Realize um processo limpeza nos dados removendo ou substituindo os valores nulos quando necessário, e eliminando dados duplicados e inconsistentes caso exista algum. 
@@ -116,8 +116,202 @@ O retorno da consulta foi:
 
 
 ### Objetivo 3: Utilize técnicas de visualização de dados para explorar a distribuição dos dados.
-### Objetivo 4:
-### Objetivo 5:
+
+Das medidas das variáveis dos dados, é possível realizar algumas vizualizações importantes, como uma análise geral das vendas totais a partir de um gráfico de boxplot:
+```
+plt.figure()
+df.boxplot(column='Sales')
+
+# Adicionar um título e rótulos aos eixos x e y
+plt.title('Boxplot da coluna Sales')
+plt.xlabel('Sales')
+plt.ylabel('Valores')
+
+# Exibir o boxplot
+plt.show()
+```
+
+
+__Img1__
+
+A partir do boxplot, é possível verificar que há uma grande variabilidade dos dados de Sales com um grande número de outliers superiores. 
+
+Também é possível identificar a região com maior quantidade de produtos vendidos, maiores valores totais de vendas e maior lucro:
+```
+#Quantidade de produtos por região
+df_region_qtd = df.groupby('Region')['Quantity'].sum()
+ax = df_region_qtd.plot(kind="bar")
+ax.set_xlabel('Região')
+ax.set_ylabel('Quantidade de Produtos')
+ax.set_title('Quantidade de produtos por região')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.0f}'.format(x/1) for x in ax.get_yticks()])
+plt.show()
+# Vendas por região
+df_region_sales = df.groupby('Region')['Sales'].sum()
+ax = df_region_sales.plot(kind="bar")
+ax.set_xlabel('Região')
+ax.set_ylabel('Valor de Venda (em milhões)')
+ax.set_title('Vendas por região')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.2f}'.format(x/1000000) for x in ax.get_yticks()])
+plt.show()
+#Lucro por região
+df_region_prft = df.groupby('Region')['Profit'].sum()
+ax = df_region_prft.plot(kind="bar")
+ax.set_xlabel('Região')
+ax.set_ylabel('Lucro (em milhares)')
+ax.set_title('Lucro por região')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.2f}'.format(x/1000) for x in ax.get_yticks()])
+plt.show()
+```
+IMG2, IMG3 e IMG4
+
+Também podemos realizar a mesma análise com relação aos Paises:
+
+```
+#Quantidade de produtos por Pais
+df_country_qtd = df.groupby('Country')['Quantity'].sum()
+ax = df_country_qtd.plot(kind="bar")
+ax.set_xlabel('País')
+ax.set_ylabel('Quantidade de Produtos')
+ax.set_title('Quantidade de produtos por País')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.0f}'.format(x/1) for x in ax.get_yticks()])
+plt.show()
+# Vendas por Pais
+df_country_sales = df.groupby('Country')['Sales'].sum()
+ax = df_country_sales.plot(kind="bar")
+ax.set_xlabel('País')
+ax.set_ylabel('Valor de Venda (em milhões)')
+ax.set_title('Vendas por País')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.2f}'.format(x/1000000) for x in ax.get_yticks()])
+plt.show()
+#Lucro por Pais - É possível verificar que há paises que houveram Loss
+df_country_prft = df.groupby('Country')['Profit'].sum()
+ax = df_country_prft.plot(kind="bar")
+ax.set_xlabel('Páis')
+ax.set_ylabel('Lucro (em milhares)')
+ax.set_title('Lucro pore País')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.2f}'.format(x/1000) for x in ax.get_yticks()])
+plt.show()
+```
+IMG5 IMG6 e IMG 7
+
+Percebesse que em alguns países houve um prejuizom, dessa forma, é válido verificar qual o coportamento do prejuizo a partir do gráfico:
+
+```
+#Paises que houveram Loss
+df_country_loss = df.groupby('Country')['Profit'].sum()
+df_negative_profit = df_country_loss[df_country_loss < 0]
+ax = df_negative_profit.plot(kind="bar")
+ax.set_xlabel('País')
+ax.set_ylabel('Loss (em milhares)')
+ax.set_title('Países com Loss')
+ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+ax.yaxis.offsetText.set_visible(False)
+ax.set_yticklabels(['{:.2f}'.format(x/1000) for x in ax.get_yticks()])
+plt.show()
+```
+IMG 8
+
+
+
+### Objetivo 4: Identifique os produtos mais vendidos e analise sua distribuição geográfica.
+
+Para identificar os produtos mais vendidos no contexto de distribuição geográfica, foram agrupados em df por localização geográfica e o 'Product Name' e calculado pela soma de 'Quantity'. Após essa verificação, foram agrupados em um novo df de forma decrecente os primeiros 10 da lista para determinar os 10 produtos mais vendidos por reigão:
+- __Por região__
+```
+df_region_product = df.groupby(['Region', 'Product Name'])['Quantity'].sum().reset_index()
+df_sorted = df_region_product.sort_values(['Quantity'], ascending=[False]).head(10).reset_index(drop=True)
+print(df_sorted)
+```
+Logo temos como os produtos mais vendidos por Região:
+```
+    Region                           Product Name  Quantity
+0     East                                Staples       267
+1  Central                                Staples       249
+2     West                                Staples       216
+3    South                                Staples       144
+4  Central   Sanford Pencil Sharpener, Easy-Erase        96
+5  Central          Eldon File Cart, Single Width        91
+6  Central      Cardinal Binding Machine, Economy        74
+7  Central                 Ibico Index Tab, Clear        73
+8  Central  Stockwell Paper Clips, Assorted Sizes        70
+9  Central        Cardinal Binding Machine, Clear        68
+```
+- __Por País__
+```
+df_country_product = df.groupby(['Country', 'Product Name'])['Quantity'].sum().reset_index()
+df_sorted = df_country_product.sort_values(['Quantity'], ascending=[False]).head(10).reset_index(drop=True)
+print(df_sorted)
+```
+Logo, temos como produtos mais vendidos por Páis:
+```
+ Country                                       Product Name  Quantity
+0  United States                                            Staples       876
+1  United States                         KI Adjustable-Height Table        74
+2  United States                            Avery Non-Stick Binders        71
+3  United States                            Storex Dura Pro Binders        71
+4  United States  GBC Premium Transparent Covers with Diagonal L...        67
+5  United States         Situations Contoured Folding Chairs, 4/Set        64
+6  United States                 Chromcraft Round Conference Tables        61
+7  United States                        Eldon Wave Desk Accessories        61
+8  United States    Global Wood Trimmed Manager's Task Chair, Khaki        59
+9  United States  Wilson Jones Turn Tabs Binder Tool for Ring Bi...        59
+```
+- __Por Estado__
+```
+df_state_product = df.groupby(['State', 'Product Name'])['Quantity'].sum().reset_index()
+df_sorted = df_state_product.sort_values(['Quantity'], ascending=[False]).head(10).reset_index(drop=True)
+print(df_sorted)
+```
+Logo, temos como produtos mais vendidos por Estado:
+```
+             State                       Product Name  Quantity
+0        California                            Staples       162
+1          New York                            Staples       125
+2             Texas                            Staples       109
+3          Illinois                            Staples        66
+4              Ohio                            Staples        47
+5      Pennsylvania                            Staples        46
+6           Florida                            Staples        37
+7        California  Eldon Shelf Savers Cubes and Bins        29
+8  National Capital  Advantus Stacking Tray, Erganomic        28
+9        California       4009 Highlighters by Sanford        27
+```
+- __Por Cidade__
+```
+df_city_product = df.groupby(['City', 'Product Name'])['Quantity'].sum().reset_index()
+df_sorted = df_city_product.sort_values(['Quantity'], ascending=[False]).head(10).reset_index(drop=True)
+print(df_sorted)
+```
+Logo, temos como produtos mais vendidos por Cidade:
+```
+          City                  Product Name  Quantity
+0  New York City                       Staples        92
+1    Los Angeles                       Staples        65
+2        Houston                       Staples        61
+3  San Francisco                       Staples        50
+4   Philadelphia                       Staples        42
+5        Chicago                       Staples        40
+6       Columbus                       Staples        32
+7    Tegucigalpa     Acco Binder Covers, Clear        25
+8    Mexico City  Cisco Smart Phone, Full Size        25
+9         Manila   Acco Binder Covers, Durable        23
+```
+___Dessa forma, temos os produtos mais vendidos e suas distribuições geográficas__
+
+### Objetivo 5: Analise a relação entre as vendas e outras variáveis, como o tempo de entrega e o preço dos produtos.
 
  
 
